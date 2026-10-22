@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--Versión del modelo de configuración que utiliza Maven.-->
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <!--PARENT / PADRE DE SPRING BOOT
+        Hereda configuraciones, versiones y valores predeterminados
+        de Spring Boot. También permite que muchas dependencias de Spring Boot no necesiten especificar manualmente su versión.-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/>
+    </parent>
+
+
+    <!--IDENTIFICACIÓN DEL PROYECTO
+        groupId: Identifica al grupo/organización al que pertenece el proyecto.
+        artifactId: Nombre del proyecto/artefacto Maven.
+        version: Versión actual del proyecto.
+        SNAPSHOT indica que es una versión de desarrollo.-->
+    <groupId>com</groupId>
+    <artifactId>Envios</artifactId>
+    <version>0.0.1</version>
+
+    <name>Envios</name>
+    <description>Envios</description>
+
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+
+    <developers>
+        <developer/>
+    </developers>
+
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+
+
+    <!--PROPIEDADES DEL PROYECTO-->
+    <properties>
+        <!--Versión de Java utilizada para compilar el proyecto.-->
+        <java.version>26</java.version>
+
+        <!--Versión del BOM (Bill of Materials) de Spring Cloud.
+            Sirve para controlar las versiones compatibles de las diferentes dependencias de Spring Cloud.-->
+        <spring-cloud.version>2025.1.2</spring-cloud.version>
+    </properties>
+
+
+    <!-- ========================================================= -->
+    <!-- DEPENDENCIAS                                               -->
+    <!-- ========================================================= -->
+
+    <dependencies>
+
+        <!--SPRING DATA JPA / HIBERNATE
+            Permite trabajar con bases de datos utilizando JPA.
+            Proporciona herramientas como: - Entity - Repository - JpaRepository - consultas JPA - integración con Hibernate.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!--SPRING CONFIG CLIENT
+            Permite obtener configuración desde tu Config Server.-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+
+        <!--SPRING VALIDATION
+            Permite validar datos recibidos por la aplicación.
+            Ejemplos: @NotNull @NotBlank @Size @Positive @Email @Valid @Validated
+            Lo utilizás para validar los DTOs y datos de entrada.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+
+        <!--SPRING WEB MVC
+            Permite crear aplicaciones web y APIs REST.
+            Proporciona herramientas como: @RestController @GetMapping @PostMapping @PutMapping @DeleteMapping ResponseEntity
+            Es la parte que permite que EnviosApi exponga endpoints HTTP.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+
+
+        <!--SPRING CLOUD OPENFEIGN
+            Permite realizar llamadas HTTP hacia otros microservicios mediante interfaces declarativas.
+            En tu arquitectura, EnviosApi utiliza OpenFeign para comunicarse con ClientesApi.
+            Ejemplo:
+            @FeignClient(name = "clientes-api")
+            Feign se encarga de generar automáticamente la implementación del cliente HTTP.-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+
+        <!--SPRING BOOT DEVTOOLS
+            Herramientas destinadas al desarrollo. Principalmente permite detectar cambios durante el desarrollo y reiniciar automáticamente la aplicación.
+            No es necesario para que la aplicación funcione en producción.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+
+        <!--MYSQL CONNECTOR/J
+            Driver JDBC que permite que Java/Spring se comunique con una base de datos MySQL.
+            scope runtime: Se necesita cuando la aplicación se ejecuta, pero no es necesario directamente para compilar el código de la aplicación.-->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <!--LOMBOK
+            Reduce código repetitivo en las clases Java.
+            Ejemplos: @Getter @Setter @Data @NoArgsConstructor @AllArgsConstructor @Builder
+            Lombok genera código durante la compilación mediante procesamiento de anotaciones.-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+        <!--SPRING DATA JPA - TEST
+            Dependencias y herramientas para realizar pruebas relacionadas con Spring Data JPA.
+            scope test: Solo está disponible durante la ejecución de tests.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--SPRING VALIDATION - TEST
+            Dependencias necesarias para realizar pruebas relacionadas con Spring Validation.
+            scope test: Solo se utilizan durante los tests.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--SPRING WEB MVC - TEST
+            Herramientas para probar componentes relacionados con Spring MVC y APIs REST.
+            Por ejemplo, permite realizar pruebas sobre controladores.
+            scope test: Solo está disponible durante la ejecución de tests.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--SPRING BOOT ACTUATOR
+            Proporciona endpoints para monitorear y obtener información sobre el estado de la aplicación.
+            Ejemplos:
+            /actuator/health
+            /actuator/info
+            /actuator/metrics
+
+            En tu application.properties tenés: management.endpoints.web.exposure.include=*
+            por lo que estás exponiendo los endpoints de Actuator.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+
+        <!--EUREKA CLIENT
+            Permite que EnviosApi se registre como cliente en un Eureka Server. También permite descubrir otros servicios registrados en Eureka.
+            En tu arquitectura:
+            Eureka Server → localhost:8761
+            EnviosApi → se registra como ENVIOS-API
+            EnviosApi → descubre CLIENTES-API-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+
+        <!--SPRING CLOUD LOADBALANCER
+            Permite seleccionar una instancia disponible de un microservicio cuando existen múltiples instancias registradas en Eureka.
+            En tu arquitectura existen dos instancias de ClientesApi:
+            CLIENTES-API → puerto 9000
+            CLIENTES-API → puerto 9001
+            LoadBalancer recibe las instancias disponibles desde Eureka y selecciona cuál utilizar.
+            Actualmente se utiliza el algoritmo Round Robin (por defecto).-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+
+        <!--RESILIENCE4J / SPRING CLOUD CIRCUIT BREAKER
+            Permite implementar mecanismos de tolerancia a fallos.
+            Entre ellos: - Circuit Breaker - Retry - Rate Limiter - Time Limiter - Bulkhead
+
+            En tu arquitectura puede utilizarse para proteger las llamadas entre microservicios.
+            Por ejemplo, si ClientesApi falla repetidamente, Circuit Breaker puede intervenir y ejecutar un fallback.-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+        </dependency>
+
+    </dependencies>
+
+
+    <!-- ========================================================= -->
+    <!-- DEPENDENCY MANAGEMENT                                     -->
+    <!-- ========================================================= -->
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!--SPRING CLOUD BOM
+                BOM = Bill of Materials.
+                Su función es administrar las versiones compatibles de las diferentes dependencias de Spring Cloud.
+                Gracias a esto, normalmente no necesitás escribir manualmente la versión de cada dependencia de Spring Cloud.-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <!--APACHE HTTPCLIENT
+                Biblioteca utilizada para realizar comunicaciones HTTP desde Java.
+                Esta entrada dentro de dependencyManagement fija la versión que se utilizaría si alguna dependencia del proyecto necesita Apache HttpClient.
+                IMPORTANTE: Estar aquí NO significa necesariamente que tu código esté utilizando directamente HttpClient.-->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!-- ========================================================= -->
+    <!-- BUILD / PLUGINS                                           -->
+    <!-- ========================================================= -->
+
+    <build>
+        <plugins>
+
+            <!--SPRING BOOT MAVEN PLUGIN
+                Permite realizar tareas específicas de Spring Boot mediante Maven.
+                Entre otras cosas permite empaquetar la aplicación como un JAR ejecutable de Spring Boot.
+
+                Por ejemplo: mvn spring-boot:run
+                o generar el JAR ejecutable mediante: mvn package-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+
+            <!--MAVEN COMPILER PLUGIN
+                Se encarga de compilar el código Java del proyecto.
+                En tu configuración también se indica que Lombok debe utilizarse como annotation processor durante la compilación.-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+
+                <executions>
+
+                    <!--COMPILACIÓN DEL CÓDIGO PRINCIPAL-->
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>compile</phase>
+
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+
+                        <configuration>
+                            <!--Annotation Processor de Lombok.
+                                Permite que Maven procese las anotaciones de Lombok durante la compilación.-->
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+
+
+                    <!--COMPILACIÓN DEL CÓDIGO DE TESTS-->
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>test-compile</phase>
+
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+
+                        <configuration>
+                            <!--También se habilita Lombok durante la compilación de los tests.-->
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

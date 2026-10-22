@@ -1,0 +1,20 @@
+# Variables de entorno y credenciales
+.env
+.env.*
+
+# Excepción para archivos de ejemplo sin secretos
+!.env.example
+
+# Configuración de IntelliJ IDEA
+.idea/
+
+# Archivos compilados de Java
+target/
+*.class
+
+# Logs
+*.log
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

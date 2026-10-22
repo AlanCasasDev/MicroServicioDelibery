@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--Versión del modelo de configuración que utiliza Maven.-->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--PARENT / PADRE DE SPRING BOOT
+        Hereda configuraciones, versiones y valores predeterminados
+        de Spring Boot. También permite que muchas dependencias de Spring Boot no necesiten especificar manualmente su versión.-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/>
+    </parent>
+
+
+    <!--IDENTIFICACIÓN DEL PROYECTO
+        groupId: Identifica al grupo/organización al que pertenece el proyecto.
+        artifactId: Nombre del proyecto/artefacto Maven.
+        version: Versión actual del proyecto.
+        SNAPSHOT indica que es una versión de desarrollo.-->
+    <groupId>com</groupId>
+    <artifactId>EurekaServerDelibery</artifactId>
+    <version>0.0.1</version>
+
+    <name>EurekaServerDelibery</name>
+    <description>Servidor Eureka para la arquitectura de microservicios Delibery</description>
+
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+
+    <developers>
+        <developer/>
+    </developers>
+
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+
+
+    <!--PROPIEDADES DEL PROYECTO-->
+    <properties>
+        <!--Versión de Java utilizada para compilar el proyecto.-->
+        <java.version>26</java.version>
+
+        <!--Versión del BOM (Bill of Materials) de Spring Cloud.
+            Sirve para controlar las versiones compatibles de las diferentes dependencias de Spring Cloud.-->
+        <spring-cloud.version>2025.1.2</spring-cloud.version>
+    </properties>
+
+
+    <!-- ========================================================= -->
+    <!-- DEPENDENCIAS                                               -->
+    <!-- ========================================================= -->
+
+    <dependencies>
+
+        <!--EUREKA SERVER
+            Convierte esta aplicación en un servidor Eureka.
+            Eureka Server funciona como registro de servicios dentro de la arquitectura de microservicios.
+            En tu arquitectura:
+            Eureka Server → localhost:8761
+            ClientesApi → se registra como CLIENTES-API
+            EnviosApi → se registra como ENVIOS-API-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+
+
+        <!--SPRING BOOT DEVTOOLS
+            Herramientas destinadas al desarrollo. Principalmente permite detectar cambios durante el desarrollo y reiniciar automáticamente la aplicación.
+            No es necesario para que Eureka Server funcione en producción.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+
+        <!--LOMBOK
+            Reduce código repetitivo en las clases Java.
+            Ejemplos: @Getter @Setter @Data @NoArgsConstructor @AllArgsConstructor @Builder
+            Lombok genera código durante la compilación mediante procesamiento de anotaciones.-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+        <!--SPRING BOOT TEST
+            Proporciona herramientas para realizar pruebas de la aplicación.
+            scope test: Solo está disponible durante la ejecución de tests y no forma parte de la aplicación cuando se ejecuta normalmente.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+    <!-- ========================================================= -->
+    <!-- DEPENDENCY MANAGEMENT                                     -->
+    <!-- ========================================================= -->
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!--SPRING CLOUD BOM
+                BOM = Bill of Materials.
+                Su función es administrar las versiones compatibles de las diferentes dependencias de Spring Cloud.
+                Gracias a esto, normalmente no necesitás escribir manualmente la versión de cada dependencia de Spring Cloud.-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <!--APACHE HTTPCLIENT
+                Biblioteca utilizada para realizar comunicaciones HTTP desde Java.
+                Esta entrada dentro de dependencyManagement fija la versión que se utilizaría si alguna dependencia del proyecto necesita Apache HttpClient.
+                IMPORTANTE: Estar aquí NO significa necesariamente que tu código esté utilizando directamente HttpClient.-->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!-- ========================================================= -->
+    <!-- BUILD / PLUGINS                                           -->
+    <!-- ========================================================= -->
+
+    <build>
+        <plugins>
+
+            <!--SPRING BOOT MAVEN PLUGIN
+                Permite realizar tareas específicas de Spring Boot mediante Maven.
+                Entre otras cosas permite empaquetar la aplicación como un JAR ejecutable de Spring Boot.
+                Por ejemplo: mvn spring-boot:run
+                o generar el JAR ejecutable mediante: mvn package-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+
+            <!--MAVEN COMPILER PLUGIN
+                Se encarga de compilar el código Java del proyecto.
+                En tu configuración también se indica que Lombok debe utilizarse como annotation processor durante la compilación.-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+
+                <executions>
+
+                    <!--COMPILACIÓN DEL CÓDIGO PRINCIPAL-->
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>compile</phase>
+
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+
+                        <configuration>
+                            <!--Annotation Processor de Lombok.
+                                Permite que Maven procese las anotaciones de Lombok durante la compilación.-->
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+
+
+                    <!--COMPILACIÓN DEL CÓDIGO DE TESTS-->
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>test-compile</phase>
+
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+
+                        <configuration>
+                            <!--También se habilita Lombok durante la compilación de los tests.-->
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

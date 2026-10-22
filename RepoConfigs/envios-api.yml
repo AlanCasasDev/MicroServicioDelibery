@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: envios-api
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/microservicio_envios?serverTimezone=UTC
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+  # JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+    # Zona horaria de Hibernate/JVM
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: true
+
+    # SQL
+    show-sql: true
+
+    # Dialecto (Para test)
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: 9002
+
+# Feign - URL de la API de clientes (no necesaria si usamos eureka client-server)
+#feign:
+#  clienteapi:
+#    url: http://localhost:9001
+
+
+# Actuator - habilitar endpoints de estados
+# Info
+info:
+  app:
+    name: Microservicio Envios
+    version: 1.0.0
+    description: API de gestion de envios de delibery
+
+
+# Resilience4j
+resilience4j:
+
+  # Circuit Breaker
+  circuitbreaker:
+    instances:
+      api_clientes:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        slowCallDurationThreshold: 2s
+        slowCallRateThreshold: 50
+        registerHealthIndicator: true
+
+  # Retry
+  retry:
+    instances:
+      api_clientes:
+        maxAttempts: 3
+        waitDuration: 1s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+
+  # Rate Limiter
+  ratelimiter:
+    instances:
+      api_clientes:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0
+
+  # Bulkhead
+  bulkhead:
+    instances:
+      api_clientes:
+        maxConcurrentCalls: 10
+        maxWaitDuration: 0
+
+  # Time Limiter
+  timelimiter:
+    instances:
+      api_clientes:
+        timeoutDuration: 2s
+        cancelRunningFuture: true
+
