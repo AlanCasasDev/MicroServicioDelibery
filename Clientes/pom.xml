@@ -50,7 +50,7 @@
     <!--PROPIEDADES DEL PROYECTO-->
     <properties>
         <!--Versión de Java utilizada para compilar el proyecto.-->
-        <java.version>26</java.version>
+        <java.version>25</java.version>
 
         <!--Versión del BOM (Bill of Materials) de Spring Cloud.
             Sirve para controlar las versiones compatibles de las diferentes dependencias de Spring Cloud.        -->
