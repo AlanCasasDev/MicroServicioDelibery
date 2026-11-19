@@ -1,5 +1,9 @@
 
 services:
+
+  # =========================================================
+  # MYSQL
+  # =========================================================
   mysql:
     image: mysql:8.4
     container_name: microservicio-mysql
@@ -21,5 +25,169 @@ services:
       timeout: 5s
       retries: 10
 
+
+  # =========================================================
+  # CONFIG SERVER
+  # =========================================================
+  config-server:
+    build:
+      context: ./ConfigServer
+      dockerfile: Dockerfile
+    image: microserviciodelibery-config-server:1.0
+    container_name: microservicio-config-server
+    restart: unless-stopped
+
+    environment:
+      GITHUB_USER: ${GITHUB_USER:?Configura GITHUB_USER en .env}
+      GITHUB_PAT_REPOCONFIG: ${GITHUB_PAT_REPOCONFIG:?Configura GITHUB_PAT_REPOCONFIG en .env}
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+
+    ports:
+      - "8888:8888"
+
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8888'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+
+  # =========================================================
+  # EUREKA SERVER
+  # =========================================================
+  eureka-server:
+    build:
+      context: ./EurekaServerDelibery
+      dockerfile: Dockerfile
+    image: microserviciodelibery-eureka:1.0
+    container_name: microservicio-eureka
+    restart: unless-stopped
+
+    ports:
+      - "8761:8761"
+
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8761'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+
+  # =========================================================
+  # CLIENTES API
+  # =========================================================
+  clientes:
+    build:
+      context: ./Clientes
+      dockerfile: Dockerfile
+    image: microserviciodelibery-clientes:1.0
+    container_name: microservicio-clientes
+    restart: unless-stopped
+
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+      CONFIG_SERVER_URL: http://config-server:8888
+      EUREKA_URL: http://eureka-server:8761/eureka/
+
+    ports:
+      - "9000:9000"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9000'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+
+  # =========================================================
+  # ENVIOS API
+  # =========================================================
+  envios:
+    build:
+      context: ./Envios
+      dockerfile: Dockerfile
+    image: microserviciodelibery-envios:1.0
+    container_name: microservicio-envios
+    restart: unless-stopped
+
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+      CONFIG_SERVER_URL: http://config-server:8888
+      EUREKA_URL: http://eureka-server:8761/eureka/
+
+    ports:
+      - "9002:9002"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9002'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+
+  # =========================================================
+  # API GATEWAY
+  # =========================================================
+  gateway:
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile
+    image: microserviciodelibery-gateway:1.0
+    container_name: microservicio-gateway
+    restart: unless-stopped
+
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      EUREKA_URL: http://eureka-server:8761/eureka/
+
+    ports:
+      - "8081:8081"
+
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8081'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+
+# =========================================================
+# VOLUMENES
+# =========================================================
 volumes:
   mysql_data:
