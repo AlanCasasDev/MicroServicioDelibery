@@ -2,7 +2,7 @@
 # ==========================================
 # ETAPA 1: COMPILACION
 # ==========================================
-FROM maven:3.9-eclipse-temurin-26 AS build
+FROM maven:3.9-eclipse-temurin-25 AS build
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN mvn -B clean package -DskipTests
 # ==========================================
 # ETAPA 2: EJECUCION
 # ==========================================
-FROM eclipse-temurin:26-jre
+FROM eclipse-temurin:25-jre
 
 WORKDIR /app
 
